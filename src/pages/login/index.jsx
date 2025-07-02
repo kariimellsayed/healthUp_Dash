@@ -70,18 +70,6 @@ const Login = () => {
               Login
             </Button>
           </Form.Item>
-
-          <Form.Item>
-            <p style={{ textAlign: "center" }}>
-              Don't have an account?{" "}
-              <Link
-                href="/register"
-                className="text-blue-500 hover:text-blue-600 transition-all duration-200"
-              >
-                Register here
-              </Link>
-            </p>
-          </Form.Item>
         </Form>
       </div>
     </div>
