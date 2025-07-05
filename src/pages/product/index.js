@@ -11,6 +11,7 @@ const Product = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editProductData, setEditProductData] = useState(null);
+  const [imgError, setImgError] = useState({});
 
   // GetProducts
   const getProducts = () => {
@@ -19,7 +20,6 @@ const Product = () => {
       .get("/api/e-commerce/products")
       .then((res) => {
         setProducts(res.data.data);
-        console.log(res.data.data);
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -63,19 +63,42 @@ const Product = () => {
       key: "name",
       render: (name, record) => (
         <div className="wrapperTitle">
-          <Image
-            src={record.image_url}
-            alt="client nisbau"
-            width={140}
-            height={100}
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "1px solid #eee",
-            }}
-          />
+          {record.image_url && !imgError[record.id] ? (
+            <Image
+              src={record.image_url}
+              alt={name}
+              width={40}
+              height={40}
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                objectFit: "cover",
+                border: "1px solid #eee",
+              }}
+              onError={() =>
+                setImgError((prev) => ({ ...prev, [record.id]: true }))
+              }
+            />
+          ) : (
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                backgroundColor: "#f0f0f0",
+                color: "#333",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: "bold",
+                fontSize: 14,
+                border: "1px solid #eee",
+              }}
+            >
+              {name?.charAt(0).toUpperCase()}
+            </div>
+          )}
           <h6 style={{ fontSize: "12px" }}>{name}</h6>
         </div>
       ),

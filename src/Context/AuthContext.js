@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
   //   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token-healthUp");
+    const token = localStorage.getItem("token-healthUp-admin");
 
     if (token) {
       setIsLoggedIn(true);

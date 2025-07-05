@@ -20,7 +20,10 @@ const Login = () => {
       })
       .then((res) => {
         message.success("You have been successfully logged in.");
-        window.localStorage.setItem("token-healthUp", res.data.data.token);
+        window.localStorage.setItem(
+          "token-healthUp-admin",
+          res.data.data.token
+        );
         setIsLoggedIn(true);
         router.push("/product");
       })

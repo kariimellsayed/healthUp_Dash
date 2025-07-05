@@ -125,23 +125,17 @@ const AddProduct = ({ open, onClose, refreshProducts }) => {
           />
         </Form.Item>
 
-        {/* <Form.Item label="Product Image" required>
-          <Upload
-            beforeUpload={(file) => {
-              setImageFile(file);
-              return false; // prevent auto upload
-            }}
-            showUploadList={imageFile ? [{ name: imageFile.name }] : false}
-            maxCount={1}
-            onRemove={() => setImageFile(null)}
-          >
-            <Button icon={<UploadOutlined />}>Upload Image</Button>
-          </Upload>
-        </Form.Item> */}
         <Form.Item label="Product Image" required>
           <Upload
             listType="picture-card"
             beforeUpload={(file) => {
+              const isLt2MB = file.size / 1024 <= 2048;
+
+              if (!isLt2MB) {
+                message.error("Image must be smaller than 2MB (2048 KB)!");
+                return Upload.LIST_IGNORE;
+              }
+
               setImageFile(file);
               return false;
             }}
