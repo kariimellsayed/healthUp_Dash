@@ -63,7 +63,23 @@ const Product = () => {
       key: "name",
       render: (name, record) => (
         <div className="wrapperTitle">
-          {record.image_url && !imgError[record.id] ? (
+          <Image
+            src={record.image_url}
+            alt={name}
+            width={40}
+            height={40}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              objectFit: "cover",
+              border: "1px solid #eee",
+            }}
+            onError={() =>
+              setImgError((prev) => ({ ...prev, [record.id]: true }))
+            }
+          />
+          {/* {record.image_url && !imgError[record.id] ? (
             <Image
               src={record.image_url}
               alt={name}
@@ -98,7 +114,7 @@ const Product = () => {
             >
               {name?.charAt(0).toUpperCase()}
             </div>
-          )}
+          )} */}
           <h6 style={{ fontSize: "12px" }}>{name}</h6>
         </div>
       ),
