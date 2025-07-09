@@ -30,6 +30,10 @@ const Order = () => {
   const [loading, setLoading] = useState(false);
   // Active tab state
   const [activeTab, setActiveTab] = useState("all");
+  // Details Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // Selected order for details
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   // Fetch orders based on status
   const getOrders = (status = "") => {
@@ -73,6 +77,12 @@ const Order = () => {
           .finally(() => setLoading(false));
       },
     });
+  };
+
+  // Order Details
+  const handleShowDetails = (order) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
   };
 
   // Table columns configuration
@@ -131,9 +141,22 @@ const Order = () => {
       title: "",
       key: "actions",
       render: (_, record) => (
-        <Button danger onClick={() => handleDeleteOrder(record.id)}>
-          Delete
-        </Button>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Button danger onClick={() => handleDeleteOrder(record.id)}>
+            Delete
+          </Button>
+
+          <Button type="primary" onClick={() => handleShowDetails(record)}>
+            Details
+          </Button>
+        </div>
       ),
     },
   ];
@@ -215,6 +238,64 @@ const Order = () => {
           </>
         )}
       </div>
+
+      <Modal
+        title={`Order #${selectedOrder?.id} Details`}
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+      >
+        {selectedOrder ? (
+          <div>
+            <p>
+              <strong>User ID:</strong> {selectedOrder.user_id}
+            </p>
+            <p>
+              <strong>Address:</strong> {selectedOrder.address}
+            </p>
+            <p>
+              <strong>Total Price:</strong> {selectedOrder.total_price}
+            </p>
+            <p>
+              <strong>Status:</strong>{" "}
+              <Tag color={STATUS_COLORS[selectedOrder.status]}>
+                {selectedOrder.status.toUpperCase()}
+              </Tag>
+            </p>
+            <p>
+              <strong>Products:</strong>
+            </p>
+            <Table
+              dataSource={selectedOrder.products}
+              rowKey="product_id"
+              pagination={false}
+              columns={[
+                {
+                  title: "Product ID",
+                  dataIndex: "product_id",
+                },
+                {
+                  title: "Name",
+                  dataIndex: "name",
+                },
+                {
+                  title: "Quantity",
+                  dataIndex: "quantity",
+                },
+                {
+                  title: "Price Per Unit",
+                  dataIndex: "price_per_unit",
+                },
+                {
+                  title: "Subtotal",
+                  dataIndex: "subtotal",
+                },
+              ]}
+              size="small"
+            />
+          </div>
+        ) : null}
+      </Modal>
     </div>
   );
 };
